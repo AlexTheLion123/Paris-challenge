@@ -9,4 +9,7 @@ export default function startApp(_provider) {
     // Access the decentralizd web via metamask!
     const prov = new ethers.providers.Web3Provider(window.ethereum);
     const signer = prov.getSigner();
+
+    const loan_address = process.env.LOAN_ADDRESS;
+    console.log(loan_address)
 }
