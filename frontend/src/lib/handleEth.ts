@@ -31,7 +31,7 @@ export default async function handleEthereum() {
         });
     ethereum.on("accountsChanged", handleAccountsChanged)
     
-    connect(handleAccountsChanged)
+    connect()
 }
 
 function handleChainChanged(_chainId) {
