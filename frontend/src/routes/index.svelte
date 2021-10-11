@@ -1,6 +1,7 @@
 <script>
 	import Loan from '../components/Loan.svelte';
 	import Request from '../components/Request.svelte';
+	import ConnectButton from '../components/ConnectButton.svelte';
 
 	const loans = [
 		{ status: 'Requested', rate: 10, amount: 10, outstanding: 11 },
@@ -14,6 +15,8 @@
 </script>
 
 <div class="container">
+	<ConnectButton/>
+
 	<section class="my-loans">
 		<h2>My loans</h2>
 		<hr />
