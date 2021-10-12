@@ -1,7 +1,12 @@
-<script>
+<script type="ts">
 	import Loan from '../components/Loan.svelte';
 	import Request from '../components/Request.svelte';
 	import ConnectButton from '../components/ConnectButton.svelte';
+
+	import handleMetamask from '$lib/scripts/metamask'
+	import { onMount } from 'svelte';
+	import { setContext } from 'svelte';
+	
 
 	const loans = [
 		{ status: 'Requested', rate: 10, amount: 10, outstanding: 11 },
@@ -12,6 +17,14 @@
 	]; // fake
 
 	let curRate = 10;
+	
+	setContext('user', {
+		getUser: () => user
+	});
+	
+	let user;
+
+	onMount(handleMetamask)
 </script>
 
 <div class="container">

@@ -1,11 +1,13 @@
 <script lang="ts">
-	import startUser from '$lib/scripts/startUser';
+    import { userStore } from '$lib/scripts/metamask_accounts';
+    import { get } from 'svelte/store';
+    import type { User } from '$lib/scripts/user'
 
-    async function requestLoan(){
-        const request = await startUser();
+    function handleSubmit() {
+        const user = get(userStore) as User;
         
     }
-
+    
 </script>
 
 <form action="">
@@ -25,7 +27,7 @@
 		type="submit"
 		value="Request new loan"
 		class="button submit-btn"
-		on:submit|preventDefault={requestLoan}
+        on:click|preventDefault={handleSubmit}
 	/>
 </form>
 

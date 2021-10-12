@@ -1,11 +1,3 @@
-<script type="ts">
-    import handleMetamask from '$lib/scripts/metamask'
-	import { onMount } from 'svelte';
-	// import { LoanContract } from '../types/index';
-
-	onMount(handleMetamask);
-</script>
-
 <nav>
 	<h1>Alex Loan App</h1>
 </nav>
