@@ -1,8 +1,18 @@
-<script>
-    import {connect} from '$lib/accounts';
+<script lang="ts">
+    import {accountsObj} from '$lib/scripts/metamask_accounts';
+    import {connectSignal} from '$lib/scripts/metamask_accounts';
+
+    let btn_text = "Connect to metamask"
+    $: isConnected = $connectSignal.isConnected
+
+    $: if(isConnected === true) {
+        btn_text = $connectSignal.account
+    } else {
+        btn_text = "Connect to metamask";
+    }
 </script>
 
-<div class="button connect-btn" on:click={connect}>Connect to metamask</div>
+<div class="button connect-btn" on:click={accountsObj.connect}>{btn_text}</div>
 
 <style lang="scss">
     $button-color: rgb(198, 99, 255);
@@ -19,7 +29,7 @@
             background: darken($button-color, 10%);
 
         }
-
+        overflow: hidden;
     }
 
 

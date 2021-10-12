@@ -1,9 +1,9 @@
 <script type="ts">
-    import handleEthereum from '$lib/handleEth'
+    import handleMetamask from '$lib/scripts/metamask'
 	import { onMount } from 'svelte';
 	// import { LoanContract } from '../types/index';
 
-	onMount(handleEthereum);
+	onMount(handleMetamask);
 </script>
 
 <nav>
