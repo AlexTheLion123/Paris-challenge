@@ -5,8 +5,6 @@
 
 	import handleMetamask from '$lib/scripts/metamask'
 	import { onMount } from 'svelte';
-	import { setContext } from 'svelte';
-	
 
 	const loans = [
 		{ status: 'Requested', rate: 10, amount: 10, outstanding: 11 },
@@ -18,11 +16,6 @@
 
 	let curRate = 10;
 	
-	setContext('user', {
-		getUser: () => user
-	});
-	
-	let user;
 
 	onMount(handleMetamask)
 </script>

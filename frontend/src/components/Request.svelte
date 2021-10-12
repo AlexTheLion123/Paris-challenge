@@ -1,11 +1,21 @@
 <script lang="ts">
     import { userStore } from '$lib/scripts/metamask_accounts';
     import { get } from 'svelte/store';
-    import type { User } from '$lib/scripts/user'
+    import type { User } from '$lib/scripts/user';
 
-    function handleSubmit() {
-        const user = get(userStore) as User;
-        
+    let requestAmount: number;
+
+    let user: User;
+
+    const unsubscribe = userStore.subscribe(item => {
+        user = item as User;
+    })
+    $: console.log("user changed", user)
+    
+    async function handleSubmit() {
+        const hello = await user.requestLoan(1000);
+        console.log(hello)
+        // console.log(await user.getLoans())
     }
     
 </script>
@@ -13,13 +23,13 @@
 <form action="">
 	<label for="requestAmount">Requested Amount</label>
 	<div class="input-and-eth">
-		<input type="number" id="requestAmount" placeholder="Enter reqeusted amount" />
+		<input type="number" id="requestAmount" placeholder="Enter reqeusted amount" bind:value={requestAmount}/>
 		<span class="eth-label">ETH</span>
 	</div>
 
 	<label for="refundAmount">Amount to refund if borrowed</label>
 	<div class="input-and-eth">
-		<input type="number" id="refundAmount" placeholder="Enter amount fo refund" />
+		<input type="number" id="refundAmount" placeholder="Enter amount fo refund"/>
 		<span class="eth-label">ETH</span>
 	</div>
 

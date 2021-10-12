@@ -8,18 +8,17 @@ export interface User {
     readonly loan_contract: LoanContract;
     readonly signedLoanContract: LoanContract;
 
-    getLoans: Promise<ethers.BigNumber[]>
-    requestLoan: Promise<ethers.ContractTransaction>
-    getSignerAddress: Promise<string>
+    getLoans(): Promise<ethers.BigNumber[]>
+    requestLoan(amount: number): Promise<ethers.ContractTransaction>
+    getSignerAddress(): Promise<string>
 }
 
 export default class user {    
-    private LOAN_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+    private LOAN_ADDRESS = '0x5fbdb2315678afecb367f032d93f642f64180aa3'
     private provider = new ethers.providers.Web3Provider(window.ethereum);
-    readonly loan_contract = new ethers.Contract(this.LOAN_ADDRESS, LOAN_ABI, this.provider) as LoanContract; // Instantiate contract
-    
-    readonly signer: Signer = this.provider.getSigner();
-    readonly signedLoanContract = this.loan_contract.connect(this.signer);// Sign contract with current address
+    private loan_contract = new ethers.Contract(this.LOAN_ADDRESS, LOAN_ABI, this.provider) as LoanContract; // Instantiate contract
+    private signer: Signer = this.provider.getSigner();
+    private signedLoanContract = this.loan_contract.connect(this.signer);// Sign contract with current address
 
     async getLoans() {
         return (await this.signedLoanContract.getClientToLoansIds(await this.getSignerAddress()));
@@ -27,8 +26,8 @@ export default class user {
     // user.prototype.repayfunction() {
     
     // }
-    requestLoan() {
-        return this.signedLoanContract.requestLoan(1000)
+    requestLoan(amount: number) {
+        return this.signedLoanContract.requestLoan(amount)
     }
     getSignerAddress() {
         return this.signer.getAddress()
