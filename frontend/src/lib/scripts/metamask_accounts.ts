@@ -16,6 +16,9 @@ export const accountsObj = {
         } else if (accounts[0] !== accountsObj.currentAccount) {
             accountsObj.currentAccount = accounts[0];
             connectSignal.set({isConnected: true, account: accountsObj.currentAccount})
+
+            // startapp
+
             console.log('Account changed successfully')
         }
     },
