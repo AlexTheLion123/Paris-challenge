@@ -3,26 +3,33 @@
 	import Request from '../components/Request.svelte';
 	import ConnectButton from '../components/ConnectButton.svelte';
 
-	import handleMetamask from '$lib/scripts/metamask'
+	import handleMetamask from '$lib/scripts/metamask';
 	import { onMount } from 'svelte';
 
 	import { userStore } from '$lib/scripts/metamask_accounts';
 	import type { User } from '$lib/scripts/user';
-import { prototype } from 'events';
+	import type { userLoan } from '$lib/scripts/user';
+	import type { ethers } from 'ethers';
 
 	/**
-	 * @dev callback is executed every time the user changes  
+	 * @dev callback is executed every time the user changes
 	 */
 	let user: User;
-	let loans;
+	let loans: userLoan[];
 
 	onMount(() => {
 		const unsubscribe = userStore.subscribe(async (item) => {
 			user = item as User;
-			
+	
+			// get user loans
+			let loanIds: ethers.BigNumber[] | number[] = [...(await user.getLoanIds())];
+			loanIds = loanIds.map((item) => item.toNumber());
+	
+			loans = await user.getLoansFromIds(loanIds);
+	
+			console.log(loans)
 		});
-
-	})
+	});
 
 	const loansfake = [
 		{ status: 'Requested', rate: 10, amount: 10, outstanding: 11 },
@@ -36,7 +43,7 @@ import { prototype } from 'events';
 </script>
 
 <div class="container">
-	<ConnectButton/>
+	<ConnectButton />
 
 	<section class="my-loans">
 		<h2>My loans</h2>
@@ -46,7 +53,7 @@ import { prototype } from 'events';
 			{#each loansfake as loan, index}
 				<div class="loan">
 					<Loan
-                        {index}
+						{index}
 						status={loan.status}
 						rate={loan.rate}
 						amount={loan.amount}
@@ -63,9 +70,7 @@ import { prototype } from 'events';
 	</section>
 </div>
 
-<footer>
-
-</footer>
+<footer />
 
 <style type="scss">
 	.container {
@@ -73,17 +78,15 @@ import { prototype } from 'events';
 		margin: auto;
 		padding: 0 50px;
 		width: 100%;
-
-	
 	}
 	.my-loans {
-        h2 {
-            margin: 20px 0;
+		h2 {
+			margin: 20px 0;
 		}
-        
-        hr {
-            margin: 30px 0;
-        }
+
+		hr {
+			margin: 30px 0;
+		}
 		.grid-wrapper {
 			width: 100%;
 			display: grid;
@@ -105,15 +108,13 @@ import { prototype } from 'events';
 		h2 {
 			margin: 20px 0 10px 0;
 		}
-        hr {
-
-        }
+		hr {
+		}
 	}
 
-    footer {
-        width: 100%;
-        height: 100px;
-        background: rgb(231, 231, 231);
-
-    }
+	footer {
+		width: 100%;
+		height: 100px;
+		background: rgb(231, 231, 231);
+	}
 </style>
