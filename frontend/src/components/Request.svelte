@@ -19,7 +19,7 @@
 		}
 		const hello = await user.requestLoan(requestAmount);
 		console.log(hello);
-		// console.log(await user.getLoans())
+		//console.log(await user.getLoans())
 	}
 </script>
 

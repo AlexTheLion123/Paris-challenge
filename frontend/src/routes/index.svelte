@@ -8,20 +8,21 @@
 
 	import { userStore } from '$lib/scripts/metamask_accounts';
 	import type { User } from '$lib/scripts/user';
+import { prototype } from 'events';
 
 	/**
 	 * @dev callback is executed every time the user changes  
 	 */
 	let user: User;
 	let loans;
-	const unsubscribe = userStore.subscribe(async (item) => {
-		user = item as User;
-		console.log(user)
-		console.log(await user.getLoans())
-		// get loans for user
-		// loans = await user.getLoans()
-		// console.log(loans)
-	});
+
+	onMount(() => {
+		const unsubscribe = userStore.subscribe(async (item) => {
+			user = item as User;
+			
+		});
+
+	})
 
 	const loansfake = [
 		{ status: 'Requested', rate: 10, amount: 10, outstanding: 11 },

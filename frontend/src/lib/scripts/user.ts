@@ -11,12 +11,13 @@ export interface User {
     getLoans(): Promise<ethers.BigNumber[]>
     requestLoan(amount: number): Promise<ethers.ContractTransaction>
     getSignerAddress(): Promise<string>
+    testing(): string
 }
 
 export default class user {    
     #LOAN_ADDRESS = '0x5fbdb2315678afecb367f032d93f642f64180aa3'
     #provider = new ethers.providers.Web3Provider(window.ethereum);
-    readonly loan_contract = new ethers.Contract(this.#LOAN_ADDRESS, LOAN_ABI, this.provider) as LoanContract; // Instantiate contract
+    readonly loan_contract = new ethers.Contract(this.#LOAN_ADDRESS, LOAN_ABI, this.#provider) as LoanContract; // Instantiate contract
     #signer: Signer = this.#provider.getSigner();
     readonly signedLoanContract = this.loan_contract.connect(this.#signer);// Sign contract with current address
 
@@ -36,5 +37,8 @@ export default class user {
     }
     getSignerAddress() {
         return this.#signer.getAddress()
+    }
+    testing() {
+        return "testing testing 123"
     }
 }
