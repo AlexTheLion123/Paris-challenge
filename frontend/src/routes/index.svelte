@@ -16,17 +16,16 @@
 	 */
 	let user: User;
 	let loans: userLoan[];
-
+	let loanIds: number[];
 	onMount(() => {
 		const unsubscribe = userStore.subscribe(async (item) => {
 			user = item as User;
 	
 			// get user loans
-			let loanIds: ethers.BigNumber[] | number[] = [...(await user.getLoanIds())];
-			loanIds = loanIds.map((item) => item.toNumber());
-	
+			// FIXME error here
+			loanIds = [...(await user.getLoanIds())];
+			console.log(loanIds)
 			loans = await user.getLoansFromIds(loanIds);
-	
 			console.log(loans)
 		});
 	});

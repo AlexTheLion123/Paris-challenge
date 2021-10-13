@@ -11,7 +11,6 @@ export default async function handleMetamask(): Promise<user> {
     // Handle chain (network) and chainChanged
     // TODO take await out when finished debugging
     const chainId = await ethereum.request({ method: 'eth_chainId' })
-    console.log("change id is ", chainId)
     ethereum.on('chainChanged', handleChainChanged);
 
     

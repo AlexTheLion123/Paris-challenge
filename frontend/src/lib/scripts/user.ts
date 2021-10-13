@@ -8,14 +8,12 @@ export interface User {
     readonly loan_contract: LoanContract;
     readonly signedLoanContract: LoanContract;
 
-    getLoanIds(): Promise<ethers.BigNumber[]>
+    getLoanIds(): Promise<number[]>
     getLoansFromIds(ids: Array<number>): Promise<userLoan[]>
     requestLoan(amount: number): Promise<ethers.ContractTransaction>
     getSignerAddress(): Promise<string>
     testing(): string
 }
-
-
 
 interface userLoan {
     id: ethers.BigNumber | number,
@@ -42,8 +40,13 @@ export default class user {
     #signer: Signer = this.#provider.getSigner();
     readonly signedLoanContract = this.loan_contract.connect(this.#signer);// Sign contract with current address
 
-    async getLoanIds() {
-        return this.signedLoanContract.getClientToLoansIds(await this.getSignerAddress());
+    async getLoanIds(): Promise<number[]> {
+        const temp = await this.signedLoanContract.getClientToLoansIds(await this.getSignerAddress());
+        let loanIds: number[];
+        for(let i=0; i<temp.length; i++){
+            loanIds.push(temp[i].toNumber());
+        }
+        return loanIds;
     }
     async getLoansFromIds(ids: Array<number>): Promise<userLoan[]> {
         let userLoans: Array<userLoan> = [];
