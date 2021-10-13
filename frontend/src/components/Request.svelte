@@ -1,39 +1,57 @@
 <script lang="ts">
-    import { userStore } from '$lib/scripts/metamask_accounts';
-    import { get } from 'svelte/store';
-    import type { User } from '$lib/scripts/user';
+	import { userStore } from '$lib/scripts/metamask_accounts';
+	import { get } from 'svelte/store';
+	import type { User } from '$lib/scripts/user';
 
-    let requestAmount: number = 2;
-	let refundAmount: number = 0;
+	let requestAmount = 2;
+	let refundAmount = 0;
+	let curRate = 10;
+	$: repayAmount = requestAmount * (1+1/curRate); //TODO work it out the same way as in the contract
 
-    let user: User;
+	// get user store
+	let user: User;
+	const unsubscribe = userStore.subscribe((item) => {
+		user = item as User;
+	});
+	$: console.log('user changed', user);
 
-    const unsubscribe = userStore.subscribe(item => {
-        user = item as User;
-    })
-    $: console.log("user changed", user)
-    
-    async function handleSubmit() {
-		if(requestAmount<0 || typeof requestAmount !== "number"){
-			return alert("Not a valid request amount")
+	async function handleSubmit() {
+		if (requestAmount < 0 || typeof requestAmount !== 'number') {
+			return alert('Not a valid request amount');
 		}
-        const hello = await user.requestLoan(requestAmount);
-        console.log(hello)
-        // console.log(await user.getLoans())
-    }
-    
+		const hello = await user.requestLoan(requestAmount);
+		console.log(hello);
+		// console.log(await user.getLoans())
+	}
 </script>
 
+<h2>Request new loan</h2>
+<h3>Current rate: {curRate}%</h3>
+
 <form action="">
-	<label for="requestAmount">Requested Amount {requestAmount}</label>
+	<label for="requestAmount">Requested Amount {requestAmount} &emsp Repay amount: {repayAmount}</label>
 	<div class="input-and-eth">
-		<input type="range" min=0 max=10 id="requestAmount" placeholder="Enter reqeusted amount" bind:value={requestAmount}/>
+		<input
+			type="range"
+			min="0"
+			max="10"
+			id="requestAmount"
+			placeholder="Enter reqeusted amount"
+			bind:value={requestAmount}
+		/>
 		<span class="eth-label">ETH</span>
 	</div>
 
 	<label for="refundAmount">Amount to refund if borrowed: {refundAmount}</label>
 	<div class="input-and-eth">
-		<input type="range" min=0 max=10 id="refundAmount" placeholder="Enter amount fo refund" bind:value={refundAmount}/>
+		<input
+			type="range"
+			min="0"
+			max="10"
+			id="refundAmount"
+			placeholder="Enter amount fo refund"
+			bind:value={refundAmount}
+		/>
 		<span class="eth-label">ETH</span>
 	</div>
 
@@ -41,7 +59,7 @@
 		type="submit"
 		value="Request new loan"
 		class="button submit-btn"
-        on:click|preventDefault={handleSubmit}
+		on:click|preventDefault={handleSubmit}
 	/>
 </form>
 
@@ -58,6 +76,13 @@
 		}
 	}
 
+	h2 {
+		margin: 20px 0 10px 0;
+	}
+
+	h3 {
+		color: rgb(93, 93, 93);
+	}
 	form {
 		margin: 20px 0;
 

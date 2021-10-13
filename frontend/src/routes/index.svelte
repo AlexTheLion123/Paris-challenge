@@ -14,7 +14,6 @@
 		{ status: 'Granted', rate: 10, amount: 10, outstanding: 11 }
 	]; // fake
 
-	let curRate = 10;
 	
 
 	onMount(handleMetamask)
@@ -44,9 +43,6 @@
 	</section>
 
 	<section class="request">
-		<h2>Request new loan</h2>
-		<h3>Current rate: {curRate}%</h3>
-
 		<Request />
 	</section>
 </div>
@@ -62,11 +58,7 @@
 		padding: 0 50px;
 		width: 100%;
 
-		section {
-			h3 {
-				color: rgb(93, 93, 93);
-			}
-		}
+	
 	}
 	.my-loans {
         h2 {
