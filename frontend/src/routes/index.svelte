@@ -6,7 +6,24 @@
 	import handleMetamask from '$lib/scripts/metamask'
 	import { onMount } from 'svelte';
 
-	const loans = [
+	import { userStore } from '$lib/scripts/metamask_accounts';
+	import type { User } from '$lib/scripts/user';
+
+	/**
+	 * @dev callback is executed every time the user changes  
+	 */
+	let user: User;
+	let loans;
+	const unsubscribe = userStore.subscribe(async (item) => {
+		user = item as User;
+		console.log(user)
+		console.log(await user.getLoans())
+		// get loans for user
+		// loans = await user.getLoans()
+		// console.log(loans)
+	});
+
+	const loansfake = [
 		{ status: 'Requested', rate: 10, amount: 10, outstanding: 11 },
 		{ status: 'Requested', rate: 10, amount: 10, outstanding: 11 },
 		{ status: 'Denied', rate: 10, amount: 10, outstanding: 11 },
@@ -14,9 +31,7 @@
 		{ status: 'Granted', rate: 10, amount: 10, outstanding: 11 }
 	]; // fake
 
-	
-
-	onMount(handleMetamask)
+	onMount(handleMetamask);
 </script>
 
 <div class="container">
@@ -27,7 +42,7 @@
 		<hr />
 
 		<div class="grid-wrapper">
-			{#each loans as loan, index}
+			{#each loansfake as loan, index}
 				<div class="loan">
 					<Loan
                         {index}

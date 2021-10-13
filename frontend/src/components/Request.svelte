@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { userStore } from '$lib/scripts/metamask_accounts';
-	import { get } from 'svelte/store';
 	import type { User } from '$lib/scripts/user';
 
 	let requestAmount = 2;
@@ -13,7 +12,6 @@
 	const unsubscribe = userStore.subscribe((item) => {
 		user = item as User;
 	});
-	$: console.log('user changed', user);
 
 	async function handleSubmit() {
 		if (requestAmount < 0 || typeof requestAmount !== 'number') {

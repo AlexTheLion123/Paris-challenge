@@ -9,11 +9,10 @@ export default async function handleMetamask(): Promise<user> {
     const provider = await detectEthereumProvider();
 
     // Handle chain (network) and chainChanged
-    // FIXME take await out when finished debugging
+    // TODO take await out when finished debugging
     const chainId = await ethereum.request({ method: 'eth_chainId' })
     console.log("change id is ", chainId)
     ethereum.on('chainChanged', handleChainChanged);
-
 
     
     // if(accountsObj.currentAccount == null){ // only connect the first time

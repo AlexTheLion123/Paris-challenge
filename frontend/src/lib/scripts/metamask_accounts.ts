@@ -21,7 +21,6 @@ export const accountsObj = {
             console.log('Account changed successfully');
             // const thisUser = new user();
             userStore.set(new user());
-            // TODO find a way to set context or other global variable of new user, trying stores
         }
         return null
     },
