@@ -26,8 +26,13 @@ export default class user {
     // user.prototype.repayfunction() {
     
     // }
+    /**
+     * @param amount wei
+     */
     requestLoan(amount: number) {
-        return this.signedLoanContract.requestLoan(amount)
+        const amount_wei = ethers.utils.parseEther(amount.toString())
+        console.log(amount_wei.toString())
+        return this.signedLoanContract.requestLoan(amount_wei)
     }
     getSignerAddress() {
         return this.signer.getAddress()

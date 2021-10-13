@@ -3,7 +3,8 @@
     import { get } from 'svelte/store';
     import type { User } from '$lib/scripts/user';
 
-    let requestAmount: number;
+    let requestAmount: number = 2;
+	let refundAmount: number = 0;
 
     let user: User;
 
@@ -13,7 +14,10 @@
     $: console.log("user changed", user)
     
     async function handleSubmit() {
-        const hello = await user.requestLoan(1000);
+		if(requestAmount<0 || typeof requestAmount !== "number"){
+			return alert("Not a valid request amount")
+		}
+        const hello = await user.requestLoan(requestAmount);
         console.log(hello)
         // console.log(await user.getLoans())
     }
@@ -21,15 +25,15 @@
 </script>
 
 <form action="">
-	<label for="requestAmount">Requested Amount</label>
+	<label for="requestAmount">Requested Amount {requestAmount}</label>
 	<div class="input-and-eth">
-		<input type="number" id="requestAmount" placeholder="Enter reqeusted amount" bind:value={requestAmount}/>
+		<input type="range" min=0 max=10 id="requestAmount" placeholder="Enter reqeusted amount" bind:value={requestAmount}/>
 		<span class="eth-label">ETH</span>
 	</div>
 
-	<label for="refundAmount">Amount to refund if borrowed</label>
+	<label for="refundAmount">Amount to refund if borrowed: {refundAmount}</label>
 	<div class="input-and-eth">
-		<input type="number" id="refundAmount" placeholder="Enter amount fo refund"/>
+		<input type="range" min=0 max=10 id="refundAmount" placeholder="Enter amount fo refund" bind:value={refundAmount}/>
 		<span class="eth-label">ETH</span>
 	</div>
 
@@ -80,11 +84,11 @@
 				height: 100%;
 				border: 1px solid rgba(0, 0, 0, 0.4);
 				border-radius: 1px;
-				border-left: none;
 
 				display: grid;
 				place-items: center;
 				padding: 0 10px;
+				margin-left: 15px;
 			}
 		}
 
