@@ -24,6 +24,7 @@ specifiers:
   ethereum-waffle: ^3.4.0
   ethers: ^5.4.7
   hardhat: ^2.6.5
+  hardhat-abi-exporter: ^2.3.0
   hardhat-deploy: ^0.9.3
   hardhat-gas-reporter: ^1.0.4
   prettier: ^2.4.1
@@ -60,6 +61,7 @@ devDependencies:
   ethereum-waffle: 3.4.0_typescript@4.4.4
   ethers: 5.4.7
   hardhat: 2.6.5
+  hardhat-abi-exporter: 2.3.0_hardhat@2.6.5
   hardhat-deploy: 0.9.3_hardhat@2.6.5
   hardhat-gas-reporter: 1.0.4_hardhat@2.6.5
   prettier: 2.4.1
@@ -4891,6 +4893,15 @@ packages:
     dependencies:
       ajv: 6.12.6
       har-schema: 2.0.0
+    dev: true
+
+  /hardhat-abi-exporter/2.3.0_hardhat@2.6.5:
+    resolution: {integrity: sha512-9EVhogHgFWsi4Bc46tv+WirOR+auGBZrv9V5/qAHBjOqYiZPbNXoFUo/yQhOAsF8Bz4Q9p4jHpdeQXnYt7g6Yw==}
+    engines: {node: '>=12.10.0'}
+    peerDependencies:
+      hardhat: ^2.0.0
+    dependencies:
+      hardhat: 2.6.5
     dev: true
 
   /hardhat-deploy-ethers/0.3.0-beta.11_ethers@5.4.7+hardhat@2.6.5:

@@ -8,6 +8,7 @@ import "hardhat-gas-reporter";
 import "solidity-coverage";
 import '@nomiclabs/hardhat-ethers'
 import 'hardhat-deploy'
+import 'hardhat-abi-exporter'
 
 dotenv.config();
 
@@ -40,13 +41,14 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
   },
-  paths: {
-    artifacts: "./frontend/src/artifacts"
-  },
   typechain: {
-    outDir: 'frontend/src/types',
+    outDir: 'frontend/src/lib/types',
     target: 'ethers-v5',
-    externalArtifacts: ['frontend/src/artifacts/contracts/*.json']
+  },
+  abiExporter: {
+    path: './frontend/src/lib/abi',
+    clear: true,
+    pretty: true
   }
 };
 
