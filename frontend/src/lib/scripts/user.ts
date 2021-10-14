@@ -21,7 +21,8 @@ interface userLoan {
     amountBorrowed: ethers.BigNumber | string,
     amountOutstanding: ethers.BigNumber | string,
     rate: ethers.BigNumber | number,
-    loanState: number
+    loanState: number,
+    status?: 'requested'| 'granted'| 'denied' | 'paidBack'
 }
 
 /// @dev utility function to ensure loan.id is a big number
@@ -33,7 +34,7 @@ function isBigNumberNumber(id: ethers.BigNumber | number): id is ethers.BigNumbe
 }
 
 
-export default class user {
+export default class user implements User {
     #LOAN_ADDRESS = '0x5fbdb2315678afecb367f032d93f642f64180aa3'
     #provider = new ethers.providers.Web3Provider(window.ethereum);
     readonly loan_contract = new ethers.Contract(this.#LOAN_ADDRESS, LOAN_ABI, this.#provider) as LoanContract; // Instantiate contract
@@ -59,6 +60,16 @@ export default class user {
             if(isBigNumberString(loan.amountBorrowed)) loan.amountBorrowed = ethers.utils.formatEther(loan.amountBorrowed).toString();
             if(isBigNumberString(loan.amountOutstanding)) loan.amountOutstanding = ethers.utils.formatEther(loan.amountOutstanding);
             if(isBigNumberNumber(loan.rate)) loan.rate = loan.rate.toNumber();
+            if(typeof loan.loanState === 'number'){ // perhaps unnecessary check
+                switch(loan.loanState){
+                    case 0: loan.status = "requested"
+                    case 1: loan.status = "granted"
+                    case 2: loan.status = "denied"
+                    case 3: loan.status = "paidBack"
+                }
+            } else {
+                throw "Error is user.ts, loanState enum was not returned as a number"
+            }
             userLoans.push(loan)
         }
         return userLoans;

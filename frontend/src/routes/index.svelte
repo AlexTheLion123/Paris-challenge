@@ -8,7 +8,7 @@
 
 	import { userStore } from '$lib/scripts/metamask_accounts';
 	import type { User } from '$lib/scripts/user';
-	import type { userLoan } from '$lib/scripts/user';
+	import type userLoan from '$lib/scripts/user';
 	import type { ethers } from 'ethers';
 
 	/**
@@ -20,13 +20,13 @@
 	onMount(() => {
 		const unsubscribe = userStore.subscribe(async (item) => {
 			user = item as User;
-	
-			// get user loans
-			// FIXME error here
-			loanIds = [...(await user.getLoanIds())];
-			console.log(loanIds)
-			loans = await user.getLoansFromIds(loanIds);
-			console.log(loans)
+			
+
+			if(user.testing){
+				loanIds = await user.getLoanIds();
+				
+			}
+			// TODO get loans every time 
 		});
 	});
 
@@ -100,14 +100,6 @@
 				box-shadow: 0 0 3px black;
 				line-height: 30px;
 			}
-		}
-	}
-
-	.request {
-		h2 {
-			margin: 20px 0 10px 0;
-		}
-		hr {
 		}
 	}
 

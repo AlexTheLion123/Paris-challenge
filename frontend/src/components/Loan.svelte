@@ -12,7 +12,7 @@
 </ul>
 {#if status == 'Granted'}
 	<label for="repay">Repay loan:</label>
-	<div class="text-and-eth"
+	<div class="text-and-eth">
 		<input type="text" id="repay" placeholder="Enter amount to repay" />
 		<span class="eth">ETH</span>
 	</div>
