@@ -2,7 +2,7 @@
 	export let index: number, status: "requested"|"granted"|"denied"|"paidBack", rate: number, amount: number, outstanding: number;
 </script>
 
-<h2>Loan #{index+1}</h2>
+<h2>Loan id: #{index+1}</h2>
 <h3>Status: <span class="status">
 	{#if status=="requested"}
 		Requested

@@ -21,7 +21,7 @@ export interface userLoan {
     amountBorrowed: number,
     amountOutstanding: number,
     rate: number,
-    loanState: number,
+    loanState?: number,
     status?: 'requested' | 'granted' | 'denied' | 'paidBack'
 }
 
@@ -31,7 +31,7 @@ interface TempLoan {
     amountBorrowed: ethers.BigNumber,
     amountOutstanding: ethers.BigNumber,
     rate: ethers.BigNumber,
-    loanState: number,
+    loanState?: number,
     status?: 'requested' | 'granted' | 'denied' | 'paidBack'
 }
 
@@ -55,9 +55,6 @@ export default class user implements User {
         const temp = await this.signedLoanContract.getClientToLoansIds(await this.getSignerAddress());
         console.log
         let loanIds: number[];
-        //for (let i = 0; i < temp.length; i++) {
-        //    loanIds.push(temp[i].toNumber());
-        //}
         loanIds = temp.map(item => {
             return item.toNumber();
         })
@@ -70,10 +67,10 @@ export default class user implements User {
             const temp: TempLoan = await this.signedLoanContract.idToLoan(ids[i]); // have to assign to temporary since it returned object seems to be readonly
             const loan: any = { ...temp }
 
-            if (isBigNumberNumber(loan.id)) loan.id = loan.id.toNumber();
-            if (isBigNumberString(loan.amountBorrowed)) loan.amountBorrowed = parseInt(ethers.utils.formatEther(loan.amountBorrowed).toString());
-            if (isBigNumberString(loan.amountOutstanding)) loan.amountOutstanding = parseInt(ethers.utils.formatEther(loan.amountOutstanding).toString());
-            if (isBigNumberNumber(loan.rate)) loan.rate = loan.rate.toNumber();
+            loan.id = temp.id.toNumber();
+            loan.amountBorrowed = parseInt(ethers.utils.formatEther(temp.amountBorrowed).toString());
+            loan.amountOutstanding = parseInt(ethers.utils.formatEther(temp.amountOutstanding).toString());
+            loan.rate = temp.rate.toNumber();
             switch (loan.loanState) {
                 case 0: loan.status = "requested"
                 case 1: loan.status = "granted"
@@ -82,6 +79,7 @@ export default class user implements User {
             }
             userLoans.push(loan)
         }
+        // TODO convert loans to array with only the necessary
 
         return userLoans;
     }

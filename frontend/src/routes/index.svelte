@@ -9,7 +9,6 @@
 	import { userStore } from '$lib/scripts/metamask_accounts';
 	import type { User } from '$lib/scripts/user';
 	import type { userLoan } from '$lib/scripts/user';
-	import type { ethers } from 'ethers';
 
 	/**
 	 * @dev callback is executed every time the user changes
@@ -18,19 +17,23 @@
 	let loans: userLoan[];
 	let loanIds: number[];
 	let isUser = false;
+
 	onMount(() => {
 		const unsubscribe = userStore.subscribe(async (item) => {
 			user = item as User;
 
-			if (user.testing) {
-				console.log(user)
-				isUser = true;
+			if (user.testing) { 
+				// getLoanIds()
 				loanIds = await user.getLoanIds();
-
-				//loans = await user.getLoansFromIds(loanIds);
-				//console.log(loans);
+				loans = await user.getLoansFromIds(loanIds);
+				loans = loans.map(item => { // removes unnecessary properties
+					return {"id": item.id, "borrowerAddress": item.borrowerAddress, "amountBorrowed":item.amountBorrowed, "amountOutstanding":item.amountOutstanding, "rate":item.rate, "status":item.status}
+				})
+				loans = [...loans]
+				
+				
+				isUser = true;
 			}
-			// TODO get loans every time
 		});
 	});
 
@@ -46,17 +49,17 @@
 
 		<div class="grid-wrapper">
 			{#if isUser}
-				<!--{#each loans as loan, index}
-					<div class="loan">
+				{#each loans as loan}
+					 <div class="loan">
 						<Loan
-							{index}
+							index = {loan.id}
 							status={loan.status}
 							rate={loan.rate}
 							amount={loan.amountBorrowed}
 							outstanding={loan.amountOutstanding}
-						/>
-					</div>
-				{/each}-->
+						/> 
+					</div> 
+				{/each} 
 			{/if}
 		</div>
 		<hr />
