@@ -15,14 +15,24 @@ export interface User {
     testing(): string
 }
 
-interface userLoan {
-    id: ethers.BigNumber | number,
+export interface userLoan {
+    id:  number,
     borrowerAddress: string,
-    amountBorrowed: ethers.BigNumber | string,
-    amountOutstanding: ethers.BigNumber | string,
-    rate: ethers.BigNumber | number,
+    amountBorrowed: number,
+    amountOutstanding: number,
+    rate: number,
     loanState: number,
-    status?: 'requested'| 'granted'| 'denied' | 'paidBack'
+    status?: 'requested' | 'granted' | 'denied' | 'paidBack'
+}
+
+interface TempLoan {
+    id:  ethers.BigNumber,
+    borrowerAddress: string,
+    amountBorrowed: ethers.BigNumber,
+    amountOutstanding: ethers.BigNumber,
+    rate: ethers.BigNumber,
+    loanState: number,
+    status?: 'requested' | 'granted' | 'denied' | 'paidBack'
 }
 
 /// @dev utility function to ensure loan.id is a big number
@@ -43,35 +53,36 @@ export default class user implements User {
 
     async getLoanIds(): Promise<number[]> {
         const temp = await this.signedLoanContract.getClientToLoansIds(await this.getSignerAddress());
+        console.log
         let loanIds: number[];
-        for(let i=0; i<temp.length; i++){
-            loanIds.push(temp[i].toNumber());
-        }
+        //for (let i = 0; i < temp.length; i++) {
+        //    loanIds.push(temp[i].toNumber());
+        //}
+        loanIds = temp.map(item => {
+            return item.toNumber();
+        })
         return loanIds;
     }
     async getLoansFromIds(ids: Array<number>): Promise<userLoan[]> {
         let userLoans: Array<userLoan> = [];
         for (let i = 0; i < ids.length; i++) {
             // change bignumbers to numbers
-            const temp: userLoan = await this.signedLoanContract.idToLoan(ids[i]); // have to assign to temporary since it returned object seems to be readonly
-            const loan: userLoan = {...temp}
+            const temp: TempLoan = await this.signedLoanContract.idToLoan(ids[i]); // have to assign to temporary since it returned object seems to be readonly
+            const loan: any = { ...temp }
 
-            if(isBigNumberNumber(loan.id)) loan.id = loan.id.toNumber();
-            if(isBigNumberString(loan.amountBorrowed)) loan.amountBorrowed = ethers.utils.formatEther(loan.amountBorrowed).toString();
-            if(isBigNumberString(loan.amountOutstanding)) loan.amountOutstanding = ethers.utils.formatEther(loan.amountOutstanding);
-            if(isBigNumberNumber(loan.rate)) loan.rate = loan.rate.toNumber();
-            if(typeof loan.loanState === 'number'){ // perhaps unnecessary check
-                switch(loan.loanState){
-                    case 0: loan.status = "requested"
-                    case 1: loan.status = "granted"
-                    case 2: loan.status = "denied"
-                    case 3: loan.status = "paidBack"
-                }
-            } else {
-                throw "Error is user.ts, loanState enum was not returned as a number"
+            if (isBigNumberNumber(loan.id)) loan.id = loan.id.toNumber();
+            if (isBigNumberString(loan.amountBorrowed)) loan.amountBorrowed = parseInt(ethers.utils.formatEther(loan.amountBorrowed).toString());
+            if (isBigNumberString(loan.amountOutstanding)) loan.amountOutstanding = parseInt(ethers.utils.formatEther(loan.amountOutstanding).toString());
+            if (isBigNumberNumber(loan.rate)) loan.rate = loan.rate.toNumber();
+            switch (loan.loanState) {
+                case 0: loan.status = "requested"
+                case 1: loan.status = "granted"
+                case 2: loan.status = "denied"
+                case 3: loan.status = "paidBack"
             }
             userLoans.push(loan)
         }
+
         return userLoans;
     }
     /// @param amount wei
@@ -84,6 +95,6 @@ export default class user implements User {
         return this.#signer.getAddress()
     }
     testing() {
-        return "testing testing 123"
+        return "123"
     }
 }

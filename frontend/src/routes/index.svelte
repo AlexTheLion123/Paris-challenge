@@ -8,7 +8,7 @@
 
 	import { userStore } from '$lib/scripts/metamask_accounts';
 	import type { User } from '$lib/scripts/user';
-	import type userLoan from '$lib/scripts/user';
+	import type { userLoan } from '$lib/scripts/user';
 	import type { ethers } from 'ethers';
 
 	/**
@@ -17,26 +17,22 @@
 	let user: User;
 	let loans: userLoan[];
 	let loanIds: number[];
+	let isUser = false;
 	onMount(() => {
 		const unsubscribe = userStore.subscribe(async (item) => {
 			user = item as User;
-			
 
-			if(user.testing){
+			if (user.testing) {
+				console.log(user)
+				isUser = true;
 				loanIds = await user.getLoanIds();
-				
+
+				//loans = await user.getLoansFromIds(loanIds);
+				//console.log(loans);
 			}
-			// TODO get loans every time 
+			// TODO get loans every time
 		});
 	});
-
-	const loansfake = [
-		{ status: 'Requested', rate: 10, amount: 10, outstanding: 11 },
-		{ status: 'Requested', rate: 10, amount: 10, outstanding: 11 },
-		{ status: 'Denied', rate: 10, amount: 10, outstanding: 11 },
-		{ status: 'Paid back', rate: 10, amount: 10, outstanding: 11 },
-		{ status: 'Granted', rate: 10, amount: 10, outstanding: 11 }
-	]; // fake
 
 	onMount(handleMetamask);
 </script>
@@ -49,17 +45,19 @@
 		<hr />
 
 		<div class="grid-wrapper">
-			{#each loansfake as loan, index}
-				<div class="loan">
-					<Loan
-						{index}
-						status={loan.status}
-						rate={loan.rate}
-						amount={loan.amount}
-						outstanding={loan.outstanding}
-					/>
-				</div>
-			{/each}
+			{#if isUser}
+				<!--{#each loans as loan, index}
+					<div class="loan">
+						<Loan
+							{index}
+							status={loan.status}
+							rate={loan.rate}
+							amount={loan.amountBorrowed}
+							outstanding={loan.amountOutstanding}
+						/>
+					</div>
+				{/each}-->
+			{/if}
 		</div>
 		<hr />
 	</section>

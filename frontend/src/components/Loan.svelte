@@ -1,16 +1,26 @@
-<script>
-	export let index, status, rate, amount, outstanding;
+<script lang="ts">
+	export let index: number, status: "requested"|"granted"|"denied"|"paidBack", rate: number, amount: number, outstanding: number;
 </script>
 
 <h2>Loan #{index+1}</h2>
-<h3>Status: <span class="status">{status}</span></h3>
+<h3>Status: <span class="status">
+	{#if status=="requested"}
+		Requested
+	{:else if status=="granted"}
+		Granted
+	{:else if status="denied"}
+		Denied
+	{:else if status="paidBack"}
+		Paid back
+	{/if}
+</span></h3>
 <ul>
 	Information:
 	<li>Loan rate: {rate}%</li>
 	<li>Loan amount: {amount}</li>
 	<li>Outstanding amount: {outstanding}</li>
 </ul>
-{#if status == 'Granted'}
+{#if status == 'granted'}
 	<label for="repay">Repay loan:</label>
 	<div class="text-and-eth">
 		<input type="text" id="repay" placeholder="Enter amount to repay" />
