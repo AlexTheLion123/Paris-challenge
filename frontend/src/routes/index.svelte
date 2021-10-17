@@ -9,32 +9,37 @@
 	import { userStore } from '$lib/scripts/contractClass/createUserStore';
 	import type { User } from '$lib/scripts/contractClass/user';
 	import type { userLoan } from '$lib/scripts/contractClass/user';
+	import { loansDStore } from '$lib/scripts/contractClass/derivedLoanStores';
 
 	/**
 	 * @dev callback is executed every time the user changes
 	 */
 	let user: User;
-	let loans: userLoan[];
-	let loanIds: number[];
 	let isUser = false;
+	let loans: userLoan[];
+
+	$: console.log("Inside index, the loans derived store is ", $loansDStore)
+
+	
 
 	onMount(() => {
-		console.log(userStore)
-		const unsubscribe = userStore.subscribe(async (item) => {
-			user = item as User;
-
+		const unsubscribeUser = userStore.subscribe(async (user: User): Promise<void> => {
 			if (user.exists) { 
-				loanIds = await user.getLoanIds();
-				loans = await user.getLoansFromIds(loanIds);
-				loans = loans.map(item => { // removes unnecessary properties
-					return {"id": item.id, "borrowerAddress": item.borrowerAddress, "amountBorrowed":item.amountBorrowed, "amountOutstanding":item.amountOutstanding, "rate":item.rate, "status":item.status, "loanState": item.loanState}
-				})
-				loans = [...loans]
-				
-				
+				console.log("loans really should work now",$loansDStore)
+
+				if($loansDStore){
+					console.log(loansDStore)
+				} else {
+					throw "Loans should exist now, but it doesn't"
+				}
+
 				isUser = true;
 			}
 		});
+		
+		const unsubscribeLoans = loansDStore.subscribe(loansStore => {
+			loans = loansStore
+		})
 	});
 
 	onMount(handleMetamask);

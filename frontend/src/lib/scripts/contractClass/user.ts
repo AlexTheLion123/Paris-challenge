@@ -48,40 +48,15 @@ export default class user implements User {
     #LOAN_ADDRESS = '0x5fbdb2315678afecb367f032d93f642f64180aa3'
     #provider = new ethers.providers.Web3Provider(window.ethereum);
     readonly loan_contract = new ethers.Contract(this.#LOAN_ADDRESS, LOAN_ABI, this.#provider) as LoanContract; // Instantiate contract
-    #signer: Signer = this.#provider.getSigner();
-    readonly signedLoanContract = this.loan_contract.connect(this.#signer);// Sign contract with current address
+    signer = this.#provider.getSigner();
+    readonly signedLoanContract = this.loan_contract.connect(this.signer);// Sign contract with current address
+    loans = this.getLoansFull()
 
-    async getLoanIds(): Promise<number[]> {
-        const temp = await this.signedLoanContract.getClientToLoansIds(await this.getSignerAddress());
-        console.log
-        let loanIds: number[];
-        loanIds = temp.map(item => {
-            return item.toNumber();
-        })
-        return loanIds;
+    async getLoansFull() {
+        const ids = await getLoanIds()
+        return getLoansFromIds(ids);
     }
-    async getLoansFromIds(ids: Array<number>): Promise<userLoan[]> {
-        let userLoans: Array<userLoan> = [];
-        for (let i = 0; i < ids.length; i++) {
-            // change bignumbers to numbers
-            const temp: TempLoan = await this.signedLoanContract.idToLoan(ids[i]); // have to assign to temporary since it returned object seems to be readonly
-            const loan: any = { ...temp }
 
-            loan.id = temp.id.toNumber();
-            loan.amountBorrowed = parseInt(ethers.utils.formatEther(temp.amountBorrowed).toString());
-            loan.amountOutstanding = parseInt(ethers.utils.formatEther(temp.amountOutstanding).toString());
-            loan.rate = temp.rate.toNumber();
-            switch (loan.loanState) {
-                case 0: loan.status = "requested"; break;
-                case 1: loan.status = "granted"; break;
-                case 2: loan.status = "denied"; break;
-                case 3: loan.status = "paidBack"; break;
-            }
-            userLoans.push(loan)
-        }
-
-        return userLoans;
-    }
     /// @param amount wei
     requestLoan(amount: number) {
         const amount_wei = ethers.utils.parseEther(amount.toString())
@@ -89,9 +64,41 @@ export default class user implements User {
         return this.signedLoanContract.requestLoan(amount_wei)
     }
     getSignerAddress() {
-        return this.#signer.getAddress()
+        return this.signer.getAddress()
     }
     exists() {
         return true
     }
+}
+
+
+async function getLoanIds(): Promise<number[]> {
+    const temp = await this.signedLoanContract.getClientToLoansIds(await this.getSignerAddress());
+    let loanIds: number[];
+    loanIds = temp.map(item => {
+        return item.toNumber();
+    })
+    return loanIds;
+}
+async function getLoansFromIds(ids: Array<number>): Promise<userLoan[]> {
+    let userLoans: Array<userLoan> = [];
+    for (let i = 0; i < ids.length; i++) {
+        // change bignumbers to numbers
+        const temp: TempLoan = await this.signedLoanContract.idToLoan(ids[i]); // have to assign to temporary since it returned object seems to be readonly
+        const loan: any = { ...temp }
+
+        loan.id = temp.id.toNumber();
+        loan.amountBorrowed = parseInt(ethers.utils.formatEther(temp.amountBorrowed).toString());
+        loan.amountOutstanding = parseInt(ethers.utils.formatEther(temp.amountOutstanding).toString());
+        loan.rate = temp.rate.toNumber();
+        switch (loan.loanState) {
+            case 0: loan.status = "requested"; break;
+            case 1: loan.status = "granted"; break;
+            case 2: loan.status = "denied"; break;
+            case 3: loan.status = "paidBack"; break;
+        }
+        userLoans.push(loan)
+    }
+
+    return userLoans;
 }

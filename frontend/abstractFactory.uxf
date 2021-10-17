@@ -1,0 +1,20 @@
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>60</x><y>250</y><w>220</w><h>190</h></coordinates><panel_attributes>UserFactory
+--
+-userAddress: Address
+
+--
+createContract(string): iContract</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>340</x><y>170</y><w>210</w><h>70</h></coordinates><panel_attributes>ContractFactory
+--
+--
+getContract(string): iContract</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1430</x><y>130</y><w>100</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;80;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>690</x><y>280</y><w>330</w><h>130</h></coordinates><panel_attributes>LoanContract
+--
+--
+getLoans(): Promise&lt;loans[]&gt;
+requestLoan(amount: number) : Promise&lt;ethers.ctxn&gt;
+getSignerAddress(): Promise&lt;address&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>650</x><y>80</y><w>310</w><h>130</h></coordinates><panel_attributes>iContract
+--
+contractAddress: address
+signedContract: contract
+--
+
+</panel_attributes><additional_attributes></additional_attributes></element></diagram>
