@@ -1,6 +1,6 @@
 <script lang="ts">
-    import {accountsObj} from '$lib/scripts/metamask_accounts';
-    import {connectSignal} from '$lib/scripts/metamask_accounts';
+    import {accountsObj} from '$lib/scripts/ethers/metamask_accounts';
+    import {connectSignal} from '$lib/scripts/ethers/metamask_accounts';
 
     let btn_text = "Connect to metamask"
     $: isConnected = $connectSignal.isConnected

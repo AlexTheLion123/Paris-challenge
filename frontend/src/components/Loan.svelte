@@ -8,9 +8,9 @@
 		Requested
 	{:else if status=="granted"}
 		Granted
-	{:else if status="denied"}
+	{:else if status=="denied"}
 		Denied
-	{:else if status="paidBack"}
+	{:else if status=="paidBack"}
 		Paid back
 	{/if}
 </span></h3>

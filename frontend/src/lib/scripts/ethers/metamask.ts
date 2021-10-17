@@ -1,7 +1,6 @@
 import detectEthereumProvider from '@metamask/detect-provider';
-import type user from './user'
+import type user from '../contractClass/user'
 import { accountsObj } from './metamask_accounts';
-import type { ethers } from 'ethers';
 declare let ethereum: any;
 
 export default async function handleMetamask(): Promise<user> {

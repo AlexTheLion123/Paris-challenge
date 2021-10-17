@@ -12,7 +12,7 @@ export interface User {
     getLoansFromIds(ids: Array<number>): Promise<userLoan[]>
     requestLoan(amount: number): Promise<ethers.ContractTransaction>
     getSignerAddress(): Promise<string>
-    testing(): string
+    exists(): boolean
 }
 
 export interface userLoan {
@@ -72,14 +72,13 @@ export default class user implements User {
             loan.amountOutstanding = parseInt(ethers.utils.formatEther(temp.amountOutstanding).toString());
             loan.rate = temp.rate.toNumber();
             switch (loan.loanState) {
-                case 0: loan.status = "requested"
-                case 1: loan.status = "granted"
-                case 2: loan.status = "denied"
-                case 3: loan.status = "paidBack"
+                case 0: loan.status = "requested"; break;
+                case 1: loan.status = "granted"; break;
+                case 2: loan.status = "denied"; break;
+                case 3: loan.status = "paidBack"; break;
             }
             userLoans.push(loan)
         }
-        // TODO convert loans to array with only the necessary
 
         return userLoans;
     }
@@ -92,7 +91,7 @@ export default class user implements User {
     getSignerAddress() {
         return this.#signer.getAddress()
     }
-    testing() {
-        return "123"
+    exists() {
+        return true
     }
 }

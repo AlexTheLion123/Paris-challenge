@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { userStore } from '$lib/scripts/metamask_accounts';
-	import type { User } from '$lib/scripts/user';
+	import { userStore } from '$lib/scripts/contractClass/createUserStore';
+	import type { User } from '$lib/scripts/contractClass/user';
+import { get } from 'svelte/store';
 
 	let requestAmount = 2;
 	let refundAmount = 0;
@@ -17,9 +18,10 @@
 		if (requestAmount < 0 || typeof requestAmount !== 'number') {
 			return alert('Not a valid request amount');
 		}
-		const hello = await user.requestLoan(requestAmount);
-		console.log(hello);
-		//console.log(await user.getLoans())
+		if(!user.exists) throw ""
+		const requesting = await user.requestLoan(requestAmount);
+		console.log(requesting);
+		// @ts-ignore
 	}
 </script>
 

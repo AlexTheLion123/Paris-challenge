@@ -3,12 +3,12 @@
 	import Request from '../components/Request.svelte';
 	import ConnectButton from '../components/ConnectButton.svelte';
 
-	import handleMetamask from '$lib/scripts/metamask';
+	import handleMetamask from '$lib/scripts/ethers/metamask';
 	import { onMount } from 'svelte';
 
-	import { userStore } from '$lib/scripts/metamask_accounts';
-	import type { User } from '$lib/scripts/user';
-	import type { userLoan } from '$lib/scripts/user';
+	import { userStore } from '$lib/scripts/contractClass/createUserStore';
+	import type { User } from '$lib/scripts/contractClass/user';
+	import type { userLoan } from '$lib/scripts/contractClass/user';
 
 	/**
 	 * @dev callback is executed every time the user changes
@@ -19,15 +19,15 @@
 	let isUser = false;
 
 	onMount(() => {
+		console.log(userStore)
 		const unsubscribe = userStore.subscribe(async (item) => {
 			user = item as User;
 
-			if (user.testing) { 
-				// getLoanIds()
+			if (user.exists) { 
 				loanIds = await user.getLoanIds();
 				loans = await user.getLoansFromIds(loanIds);
 				loans = loans.map(item => { // removes unnecessary properties
-					return {"id": item.id, "borrowerAddress": item.borrowerAddress, "amountBorrowed":item.amountBorrowed, "amountOutstanding":item.amountOutstanding, "rate":item.rate, "status":item.status}
+					return {"id": item.id, "borrowerAddress": item.borrowerAddress, "amountBorrowed":item.amountBorrowed, "amountOutstanding":item.amountOutstanding, "rate":item.rate, "status":item.status, "loanState": item.loanState}
 				})
 				loans = [...loans]
 				
@@ -51,6 +51,7 @@
 			{#if isUser}
 				{#each loans as loan}
 					 <div class="loan">
+						{loan.status}
 						<Loan
 							index = {loan.id}
 							status={loan.status}

@@ -1,9 +1,9 @@
 declare let ethereum: any;
 import { writable, get } from "svelte/store";
-import user from "./user";
+import user from "$lib/scripts/contractClass/user";
 export const connectSignal = writable({isConnected: false, account: null});
 
-export let userStore = writable({})
+import { userStore } from '../contractClass/createUserStore'
 
 export const accountsObj = {
     currentAccount: null,
@@ -20,7 +20,8 @@ export const accountsObj = {
             connectSignal.set({isConnected: true, account: accountsObj.currentAccount})
             console.log('Account changed successfully');
             // const thisUser = new user();
-            userStore.set(new user());
+            userStore.set(new user()); // ANCHOR here is where user is initially created
+            console.log(userStore)
         }
         return null
     },
