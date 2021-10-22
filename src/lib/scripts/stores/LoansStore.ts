@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-export let loansStore = createLoansStore();
+export let loansStore = writable([]);
 
 function createLoansStore() {
     const { subscribe, set} = writable({});

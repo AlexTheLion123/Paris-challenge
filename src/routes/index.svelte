@@ -9,6 +9,7 @@
 	import { AccountManager } from '$lib/scripts/Classes/AccountManager';
 
 	import { currentAccountStore, isConnectedStore } from '$lib/scripts/stores/accountStores';
+	import { loansStore } from '$lib/scripts/stores/LoansStore'
 
 	import type { IAccountManager } from '$lib/scripts/types/local-types/interfaces';
 	import type { IUserLoan } from '$lib/scripts/types/local-types/interfaces';
@@ -20,10 +21,10 @@
 	let isUser = false;
 	let loans: IUserLoan[];
 
-	$: console.log($currentAccountStore);
+	$: console.log()
 
 	onMount(() => {
-		handleMetamask().catch((error) => console.log(error));
+		handleMetamask()
 
 		// const unsubscribeLoans = loansStore.subscribe((store: IUserLoan[]) => {
 		// 	loans = store;

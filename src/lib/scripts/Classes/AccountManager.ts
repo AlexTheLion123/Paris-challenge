@@ -1,6 +1,8 @@
 declare let ethereum: any;
 
-import { isConnectedStore } from '../stores/accountStores';
+import { currentAccountStore, isConnectedStore } from '../stores/accountStores';
+export { currentAccountStore } from '../stores/accountStores'
+
 
 export const AccountManager = {
     currentAccount: "",
@@ -8,6 +10,7 @@ export const AccountManager = {
     setCurrentAccount(_currentAccount) {
         AccountManager.currentAccount = _currentAccount;
         isConnectedStore.set(true);
+        currentAccountStore.set(_currentAccount)
         console.log('Account changed successfully');
     },
 

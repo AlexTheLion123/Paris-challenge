@@ -13,7 +13,7 @@
 	}
 </script>
 
-<div class="button connect-btn" on:click={() => AccountManager.connect()}>{btn_text}</div>
+<div class="button connect-btn">{btn_text}</div>
 
 <style lang="scss">
 	$button-color: rgb(198, 99, 255);

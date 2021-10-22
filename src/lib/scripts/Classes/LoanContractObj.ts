@@ -4,6 +4,8 @@ import LOAN_ABI from "$lib/abi/contracts/Loan.sol/LoanContract.json";
 import type { LoanContract } from '../types/index'
 import type { IUserLoan } from '../types/local-types/interfaces';
 
+import { loansStore } from '../stores/LoansStore'
+
 declare let ethereum: any; // injected into the browser
 
 // import { currentAccountStore, isConnectedStore } from '$lib/scripts/stores/accountStores'
@@ -30,14 +32,18 @@ export const LoanContractObj = {
 
     async updateLoans() {
         const ids = await LoanContractObj.getLoanIds();
-        LoanContractObj.loans = await LoanContractObj.getLoansFromIds(ids);
+        const loans = await LoanContractObj.getLoansFromIds(ids)
+        loansStore.set(loans);
+        LoanContractObj.loans = loans;
     },
 
     /// @param amount in wei
-    requestLoan(amount: number) {
+    async requestLoan(amount: number) {
         const amount_wei = ethers.utils.parseEther(amount.toString())
         console.log(amount_wei.toString())
-        return LoanContractObj.signedContract.requestLoan(amount_wei)
+        const requestResult = await LoanContractObj.signedContract.requestLoan(amount_wei);
+        LoanContractObj.updateLoans();
+        return requestResult;
     },
 
     getSignerAddress() {
