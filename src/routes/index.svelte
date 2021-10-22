@@ -21,10 +21,11 @@
 	let isUser = false;
 	let loans: IUserLoan[];
 
-	$: console.log()
+	$: console.log($loansStore)
 
-	onMount(() => {
-		handleMetamask()
+	onMount(async () => {
+		await handleMetamask()
+		isUser = true;
 
 		// const unsubscribeLoans = loansStore.subscribe((store: IUserLoan[]) => {
 		// 	loans = store;
@@ -41,7 +42,7 @@
 
 		<div class="grid-wrapper">
 			{#if isUser}
-				{#each loans as loan}
+				{#each $loansStore as loan}
 					<div class="loan">
 						{loan.status}
 						<Loan
