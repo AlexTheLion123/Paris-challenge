@@ -5,6 +5,7 @@ import type { LoanContract } from '../types/index'
 import type { IUserLoan } from '../types/local-types/interfaces';
 
 import { loansStore } from '../stores/LoansStore'
+import { subscribe } from 'svelte/internal';
 
 declare let ethereum: any; // injected into the browser
 
@@ -27,7 +28,22 @@ export const LoanContractObj = {
         LoanContractObj.provider = providerTemp;
         LoanContractObj.signer = signerTemp;
         LoanContractObj.signedContract = contractTemp.connect(signerTemp);
-        LoanContractObj.signerAddress = signerAddrTemp
+        LoanContractObj.signerAddress = signerAddrTemp;
+
+        LoanContractObj.subscribe();
+    },
+
+    async subscribe() {
+        const filter = {
+            address: '0x5fbdb2315678afecb367f032d93f642f64180aa3',
+            topics: [
+                ethers.utils.id("Request(address,uint256)")
+            ]
+        }
+        LoanContractObj.provider.on(filter, () => {
+            LoanContractObj.updateLoans();
+        })
+        // LoanContractObj.signedContract.fi
     },
 
     async updateLoans() {
@@ -41,9 +57,7 @@ export const LoanContractObj = {
     async requestLoan(amount: number) {
         const amount_wei = ethers.utils.parseEther(amount.toString())
         console.log(amount_wei.toString())
-        const requestResult = await LoanContractObj.signedContract.requestLoan(amount_wei);
-        LoanContractObj.updateLoans();
-        return requestResult;
+        return LoanContractObj.signedContract.requestLoan(amount_wei);
     },
 
     getSignerAddress() {
